@@ -37,7 +37,7 @@ CHARACTERS = [
 ]
 
 # 生成 Prompt（可修改）
-PROMPT = "在东京迪士尼乐园玩耍，温馨欢乐，日式卡通风格"
+PROMPT = "Luna和Wayne在美国黄石国家公园旅游探险，看到间歇泉、野牛、壮丽山景，四格漫画，日式平面风格，温馨欢乐的旅行氛围"
 
 # === 主函数 ===
 async def main():
@@ -98,15 +98,25 @@ async def main():
             print(f"步骤 {idx + 1}: 添加角色 {character}")
             print("=" * 70 + "\n")
 
-            # 输入 @角色名
-            print(f"  1. 输入 @{character}\n")
-            await page.keyboard.type(f'@{character}')
+            # 输入 @ 触发搜索
+            print(f"  1. 输入 @ 触发搜索\n")
+            await page.keyboard.type('@')
             await asyncio.sleep(2)
 
-            # 点击搜索结果中的选项
-            print(f"  2. 选择 {character}\n")
+            # 点击 Characters 分类（关键步骤！）
+            print(f"  2. 切换到 Characters 分类\n")
             try:
-                # 使用 role="option" 选择器找到选项
+                characters_btn = page.locator('button:has-text("Characters")').first
+                await characters_btn.click()
+                await asyncio.sleep(2)
+                print("✅ 已切换到 Characters 分类\n")
+            except Exception as e:
+                print(f"⚠️  切换到 Characters 失败: {e}\n")
+
+            # 在 Characters 列表中选择角色
+            print(f"  3. 选择 {character} 角色\n")
+            try:
+                # 在 Characters 视图中查找角色选项
                 character_option = page.locator('[role="option"]').filter(has_text=character).first
                 await character_option.click()
                 await asyncio.sleep(2)
