@@ -103,28 +103,51 @@ async def main():
             await page.keyboard.type('@')
             await asyncio.sleep(2)
 
-            # 点击 Characters 分类（关键步骤！）
-            print(f"  2. 切换到 Characters 分类\n")
+            # 点击 Characters 标签页（关键步骤！）
+            print(f"  2. 点击 Characters 标签页\n")
             try:
-                characters_btn = page.locator('button:has-text("Characters")').first
-                await characters_btn.click()
+                # 使用 role="tab" 选择器，找到 Characters 标签
+                characters_tab = page.locator('button[role="tab"]:has-text("Characters")').first
+                await characters_tab.click()
                 await asyncio.sleep(2)
-                print("✅ 已切换到 Characters 分类\n")
+                print("✅ 已切换到 Characters 标签页\n")
             except Exception as e:
                 print(f"⚠️  切换到 Characters 失败: {e}\n")
 
             # 在 Characters 列表中选择角色
-            print(f"  3. 选择 {character} 角色\n")
+            print(f"  3. 点击 {character} 角色\n")
             try:
                 # 在 Characters 视图中查找角色选项
                 character_option = page.locator('[role="option"]').filter(has_text=character).first
                 await character_option.click()
                 await asyncio.sleep(2)
-                print(f"✅ {character} 已添加\n")
+                print(f"✅ {character} 已选中\n")
             except Exception as e:
                 print(f"❌ 选择 {character} 失败: {e}\n")
-                # 继续尝试下一个角色
                 continue
+
+            # 点击 "Add to Prompt" 按钮
+            print(f"  4. 点击 Add to Prompt\n")
+            try:
+                add_btn = page.locator('button:has-text("Add to Prompt")').first
+                await add_btn.click()
+                await asyncio.sleep(2)
+                print(f"✅ {character} 已添加到 Prompt\n")
+            except Exception as e:
+                print(f"❌ 点击 Add to Prompt 失败: {e}\n")
+                continue
+
+            # 验证：检查输入框中是否显示角色名
+            print(f"  5. 验证 {character} 是否正确添加\n")
+            try:
+                input_text = await page.locator('[contenteditable="true"]').first.inner_text()
+                if character.lower() in input_text.lower():
+                    print(f"✅ 验证成功：输入框中包含 '{character}'\n")
+                else:
+                    print(f"⚠️  警告：输入框中未找到 '{character}'")
+                    print(f"    当前内容: {input_text}\n")
+            except Exception as e:
+                print(f"⚠️  验证时出错: {e}\n")
 
         # === 步骤3: 输入 Prompt ===
         print("=" * 70)
