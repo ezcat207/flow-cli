@@ -213,9 +213,12 @@ flow generate -i img1.png -i img2.png -p "prompt"
 #### @ 方式（推荐）
 ```python
 输入框: page.locator('[contenteditable="true"]').first
+Characters 分类按钮: page.locator('button:has-text("Characters")').first  # 必须先点击！
 角色选项: page.locator('[role="option"]').filter(has_text="角色名").first
 Create 按钮: page.locator('button:has(i:text("arrow_forward"))').first
 ```
+
+**⚠️ 重要：** 输入 `@` 后，**必须先点击 "Characters" 分类**，否则会在 All Media 中选到错误的内容（漫画作品而不是角色）。
 
 #### 加号方式（原始）
 ```python
@@ -415,6 +418,8 @@ killall "Google Chrome"
 ### 2026-05-24 晚上
 - ✅ 发现并实现 @ 方式添加角色
 - ✅ 创建 flow_automation_at_method.py
+- ❌ 第一版：错误地在 All Media 中选择
+- ✅ 修复：必须先点击 Characters 分类
 - ✅ 完全自动化成功
 - ✅ 更新文档
 
