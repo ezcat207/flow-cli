@@ -20,16 +20,30 @@ Flow CLI 是一个用于自动化 Google Flow 图片生成的工具。当前以*
 1. 登录 Google 账号
 2. 访问你的 Flow 项目页面
 
-### 3. 运行脚本
+### 3. 运行脚本（Character 模式 - 推荐）⭐
+
+```bash
+python3 scripts/flow_automation_at_method.py
+```
+
+**修改配置：**
+```python
+CHARACTERS = ["luna", "wayne"]  # 角色名称
+PROMPT = "你的生成描述"
+```
+
+**就这么简单！** 脚本会自动：
+- 使用 @ 方式添加 Character 角色
+- 输入生成描述
+- 提交生成请求
+
+### 备选方式（Upload 模式）
 
 ```bash
 python3 scripts/flow_automation_final.py
 ```
 
-**就这么简单！** 脚本会自动：
-- 添加参考图（Luna_on_mars.png, Wayne_on_earth.png）
-- 输入生成描述
-- 提交生成请求
+**注意：** 这个方式添加第二张图可能失败，仅用于 Upload 的图片文件。
 
 ## 项目结构
 
@@ -415,13 +429,18 @@ killall "Google Chrome"
 
 ## 更新日志
 
-### 2026-05-24 晚上
+### 2026-05-24 晚上 - @ 方式完成
 - ✅ 发现并实现 @ 方式添加角色
 - ✅ 创建 flow_automation_at_method.py
 - ❌ 第一版：错误地在 All Media 中选择
-- ✅ 修复：必须先点击 Characters 分类
+- ⚠️ 第二版：点击侧边栏 Characters（错误）
+- ✅ 第三版：点击 role="tab" 的 Characters 标签页（正确）
+- ✅ 添加 "Add to Prompt" 步骤
+- ✅ 添加验证步骤（检查输入框内容）
 - ✅ 完全自动化成功
-- ✅ 更新文档
+- ✅ 理解两种模式：Character vs Upload
+- ✅ 更新 FLOW_SKILL.md 文档
+- ✅ 总结高级用法（为角色指定动作）
 
 ### 2026-05-24 下午
 - ✅ 创建项目
@@ -431,12 +450,20 @@ killall "Google Chrome"
 - ❌ CLI 存在添加图片 bug
 
 ### 待办事项
-- [x] 找到更好的添加角色方式 ✅ @ 方式
+- [x] 找到更好的添加角色方式 ✅ @ 方式（Character 模式）
+- [x] 理解两种模式 ✅ Character vs Upload
+- [x] 完善脚本和文档 ✅
 - [ ] 将 @ 方式集成到 CLI
+- [ ] 支持高级用法（为角色指定动作）
 - [ ] 添加自动化测试
 - [ ] 完善错误处理
 - [ ] 支持批量生成
 - [ ] 结果自动下载
+
+### 重要概念
+- **Character 模式：** 使用 @ 方式添加已有的 Character（包含声音，适合视频）
+- **Upload 模式：** 使用加号方式添加上传的图片（仅外观，适合图片）
+- **优先使用 Character 模式：** 特别是生成视频时
 
 ---
 
