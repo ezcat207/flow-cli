@@ -4,51 +4,127 @@
 
 ## 🎯 功能
 
-- ✅ 自动添加参考图到 Prompt
-- ✅ 自动输入生成描述
-- ✅ 自动提交生成请求
-- ✅ 支持自定义配置
-- ✅ 完整的错误处理
+- ✅ **命令行界面** - 简单易用的 CLI 工具
+- ✅ **配置管理** - 支持配置文件和命令行参数
+- ✅ **Chrome 管理** - 一键启动/停止 Chrome
+- ✅ **自动添加参考图** - 支持多张图片
+- ✅ **自动输入描述** - 自定义生成 Prompt
+- ✅ **自动提交生成** - 完整的自动化流程
+- ✅ **截图保存** - 自动保存生成结果
+- ✅ **错误处理** - 完善的错误提示
+
+## 📋 快速参考
+
+```bash
+# 安装
+pip install -e .
+
+# 配置
+flow config --set-project <PROJECT_URL>
+
+# 启动
+flow start-chrome
+
+# 生成
+flow generate -i image1.png -i image2.png -p "prompt"
+
+# 查看帮助
+flow --help
+```
+
+详细用法见：[CLI 使用指南](CLI_USAGE.md)
 
 ## 📦 安装
+
+### 方式1: CLI 工具安装（推荐）
 
 ```bash
 # 克隆仓库
 git clone <repository-url>
 cd flow-cli
 
+# 开发模式安装
+pip install -e .
+
+# 安装 Playwright
+playwright install chromium
+```
+
+详细安装说明见：[INSTALL.md](INSTALL.md)
+
+### 方式2: 直接运行脚本
+
+```bash
 # 安装依赖
 pip install playwright
 playwright install chromium
+
+# 使用脚本
+./scripts/start_chrome.sh
+python3 scripts/flow_automation_final.py
 ```
 
 ## 🚀 快速开始
 
-### 1. 启动 Chrome
+### 使用 CLI（推荐）
 
 ```bash
-./scripts/start_chrome.sh
+# 1. 配置项目
+flow config --set-project https://labs.google/fx/tools/flow/project/YOUR_PROJECT_ID
+
+# 2. 启动 Chrome
+flow start-chrome
+
+# 3. 在 Chrome 中登录 Google 账号并打开 Flow 项目
+
+# 4. 生成图片
+flow generate \
+  -i Luna_on_mars.png \
+  -i Wayne_on_earth.png \
+  -p "他们在中国杭州玩"
 ```
 
-### 2. 登录并打开项目
-
-在打开的 Chrome 中：
-1. 登录 Google 账号
-2. 访问你的 Flow 项目页面
-
-### 3. 运行自动化
+### 使用脚本
 
 ```bash
+# 1. 启动 Chrome
+./scripts/start_chrome.sh
+
+# 2. 登录并打开项目（在 Chrome 中）
+
+# 3. 运行自动化
 python3 scripts/flow_automation_final.py
 ```
 
 ## 📚 文档
 
+- [CLI 使用指南](CLI_USAGE.md) - **CLI 工具完整使用说明** ⭐
+- [安装指南](INSTALL.md) - 详细的安装步骤
 - [完整教程](docs/FLOW_TUTORIAL.md) - 详细的操作教程
 - [技能文档](docs/FLOW_SKILL.md) - 界面元素和选项详解
 - [总结文档](docs/FLOW_AUTOMATION_SUMMARY.md) - 完整总结和经验
 
 ## ⚙️ 配置
+
+### CLI 配置
+
+```bash
+# 查看当前配置
+flow config --show
+
+# 设置项目 URL
+flow config --set-project https://labs.google/fx/tools/flow/project/YOUR_PROJECT_ID
+
+# 设置截图保存目录
+flow config --set-screenshot-dir ~/Pictures/flow-screenshots
+
+# 设置 CDP URL（通常不需要修改）
+flow config --set-cdp-url http://127.0.0.1:9222
+```
+
+配置文件位置：`~/.config/flow-cli/config.json`
+
+### 脚本配置
 
 编辑 `scripts/flow_automation_final.py` 中的配置：
 
@@ -71,11 +147,20 @@ PROMPT = "你的自定义 prompt"
 ```
 flow-cli/
 ├── README.md              # 项目说明
+├── INSTALL.md             # 安装指南
+├── pyproject.toml         # Python 项目配置
+├── setup.py               # 安装脚本
+├── flow_cli/              # CLI 工具包
+│   ├── __init__.py        # 包初始化
+│   ├── cli.py             # CLI 主入口
+│   ├── automation.py      # 自动化核心逻辑
+│   ├── config.py          # 配置管理
+│   └── chrome.py          # Chrome 管理工具
 ├── docs/                  # 文档目录
 │   ├── FLOW_TUTORIAL.md   # 完整教程
 │   ├── FLOW_SKILL.md      # 技能文档
 │   └── FLOW_AUTOMATION_SUMMARY.md  # 总结文档
-├── scripts/               # 脚本目录
+├── scripts/               # 脚本目录（向后兼容）
 │   ├── start_chrome.sh    # Chrome 启动脚本
 │   └── flow_automation_final.py  # 主自动化脚本
 └── archive/               # 历史尝试（失败的方案）
@@ -134,17 +219,29 @@ flow-cli/
 
 ## 🚧 下一步计划
 
-- [ ] 命令行界面 (CLI)
+- [x] 命令行界面 (CLI) ✅
+- [x] 配置文件支持 ✅
 - [ ] 批量处理
 - [ ] 结果自动下载
 - [ ] 进度监控
-- [ ] 配置文件支持
+- [ ] 交互式图片选择
+- [ ] 支持从文件读取配置
 
 ## 📝 版本历史
 
+### v0.1.0 (2026-05-24)
+
+- ✅ CLI 工具
+- ✅ 配置管理
+- ✅ Chrome 启动/停止
+- ✅ 自动添加参考图
+- ✅ 自动输入 Prompt
+- ✅ 自动提交生成
+- ✅ 完整文档
+
 ### v1.0.0 (2026-05-24)
 
-- ✅ 基础自动化功能
+- ✅ 基础自动化脚本
 - ✅ 参考图添加
 - ✅ Prompt 输入
 - ✅ 生成提交
