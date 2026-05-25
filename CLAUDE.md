@@ -5,7 +5,9 @@
 Flow CLI 是一个用于自动化 Google Flow 图片生成的工具。当前以**脚本方式**为主，CLI 工具尚在开发中。
 
 **当前状态：**
-- ✅ 脚本方式：稳定可用（推荐）
+- ✅ 图片生成：稳定可用（@ 方式推荐）
+- ✅ 视频生成 Frames 模式：稳定可用
+- ✅ 视频生成 Ingredients 模式：稳定可用
 - 🚧 CLI 方式：开发中，存在已知问题
 
 ## 快速开始（推荐方式）
@@ -45,35 +47,34 @@ python3 scripts/flow_automation_final.py
 
 **注意：** 这个方式添加第二张图可能失败，仅用于 Upload 的图片文件。
 
-## 项目结构
+## 项目结构（2024-05-24 清理后）
 
 ```
 flow-cli/
 ├── CLAUDE.md              ← 你在这里（项目记忆）
 ├── README.md              ← 项目说明
-├── CLI_USAGE.md           ← CLI 使用指南（未完善）
 ├── INSTALL.md             ← 安装说明
+├── CLI_USAGE.md           ← CLI 使用指南
 │
-├── scripts/               ← ⭐ 主要工作方式
-│   ├── start_chrome.sh    ← Chrome 启动脚本
-│   ├── flow_automation_at_method.py  ← @ 方式脚本（最新，推荐）⭐
-│   └── flow_automation_final.py  ← 加号方式脚本（原始方法）
+├── scripts/               ← ⭐ 核心脚本（清理后仅保留 5 个）
+│   ├── start_chrome.sh                  ← Chrome 启动脚本
+│   ├── flow_automation_at_method.py     ← @ 方式生成图片（推荐）⭐
+│   ├── flow_automation_final.py         ← 加号方式生成图片（备选）
+│   ├── flow_video_generation.py         ← Frames 视频生成（完成）✅
+│   └── flow_video_ingredients.py        ← Ingredients 视频生成（完成）✅
 │
-├── flow_cli/              ← 🚧 CLI 工具（开发中）
-│   ├── cli.py             ← CLI 入口
-│   ├── automation.py      ← 自动化逻辑
-│   ├── config.py          ← 配置管理
-│   └── chrome.py          ← Chrome 管理
+├── docs/                  ← 📚 核心文档（清理后仅保留 1 个）
+│   └── FLOW_SKILL.md      ← 界面元素和操作详解 ⭐
 │
-├── docs/                  ← 📚 文档
-│   ├── FLOW_TUTORIAL.md   ← 完整教程
-│   ├── FLOW_SKILL.md      ← 界面元素和操作详解 ⭐
-│   ├── FLOW_AUTOMATION_SUMMARY.md  ← 总结
-│   └── CLI_ARCHITECTURE.md  ← CLI 架构（未来）
+├── .claude/skills/              ← 📚 Skill 文档
+│   ├── flow-video-gen.md        ← 视频生成 Skill（Frames 模式）
+│   └── flow-video-ingredients.md ← 视频生成 Skill（Ingredients 模式）✨
 │
-└── archive/               ← 失败尝试的记录
-    ├── README.md          ← 失败原因分析
-    └── [旧脚本...]
+└── archive/               ← 归档目录
+    ├── ARCHIVE_2024-05-24.md          ← 本次清理说明
+    ├── scripts_2024-05-24/            ← 归档的调试脚本 (11个)
+    ├── docs_2024-05-24/               ← 归档的早期文档 (10个)
+    └── [早期失败尝试...]
 ```
 
 ## 核心文件说明
@@ -365,6 +366,22 @@ Create 按钮: page.locator('button:has(i:text("arrow_forward"))').first
    - 如果被占用，需要修改
    - 检查：`lsof -i :9222`
 
+5. **⚠️ 超级重要：禁止换行！**
+   - **Prompt 必须是单行，不能包含换行符（\n）**
+   - **原因：** 每次按 Enter/换行键，Flow 会立即提交 prompt
+   - **后果：** 生成大量不完整的"废片"，只有最后一行被生成
+   - **解决方案：** 使用逗号或空格分隔，把所有内容写成一行
+   - **示例：**
+     ```python
+     # ❌ 错误 - 有换行
+     PROMPT = """场景描述：
+     Luna 和 Wayne 在西湖
+     背景是柳树"""
+
+     # ✅ 正确 - 单行
+     PROMPT = "场景描述，Luna 和 Wayne 在西湖，背景是柳树"
+     ```
+
 ### ✅ 最佳实践
 
 1. **每次使用前**
@@ -429,7 +446,45 @@ killall "Google Chrome"
 
 ## 更新日志
 
-### 2026-05-24 晚上 - @ 方式完成
+### 2026-05-24 深夜 - Ingredients 视频模式完成 🎬
+- ✅ **完成 Ingredients 模式视频生成**
+- ✅ 创建 `flow_video_ingredients.py` 完整脚本
+- ✅ 创建 `flow-video-ingredients.md` Skill 文档
+- 🔑 **关键发现：点击图片即自动添加，无需 "Add to Prompt" 按钮**
+- 📝 重要：Wayne 是猫，不是狗
+- 📝 重要：必须在 prompt 中明确说明角色物种
+- ✅ 实战成功：西湖跳舞视频
+
+**Ingredients vs Frames:**
+- Ingredients: 参考图 + 动作描述（AI 发挥）
+- Frames: 首尾帧定义（精确控制）
+
+### 2026-05-24 晚 - 项目清理 🧹
+- ✅ **清理脚本和文档，只保留核心文件**
+- ✅ 归档 11 个调试脚本到 `archive/scripts_2024-05-24/`
+- ✅ 归档 10 个早期文档到 `archive/docs_2024-05-24/`
+- ✅ 保留 4 个核心脚本 + 1 个启动脚本
+- ✅ 保留 1 个核心文档（FLOW_SKILL.md）
+- ✅ 创建 `ARCHIVE_2024-05-24.md` 说明文档
+- 📝 项目结构更清晰，易于维护
+
+**保留的核心脚本：**
+1. `flow_automation_at_method.py` - @ 方式生成图片
+2. `flow_automation_final.py` - 加号方式生成图片
+3. `flow_video_generation.py` - Frames 视频生成
+4. `flow_video_reference_only.py` - Ingredients 视频生成（待完善）
+
+### 2026-05-24 深夜 - 视频生成端到端完成 🎬
+- ✅ **完成视频生成完整流程**
+- ✅ **发现关键顺序要求：Nano Banana → Video → Frames → Start/End → Characters → Prompt**
+- ⚠️ 学到：必须先进入 Video Frames 模式，再添加角色
+- ⚠️ 学到：Character 模式（@方式）包含声音，视频必需
+- ✅ 创建 `flow_video_generation.py` 端到端脚本
+- ✅ 创建 `flow-video-gen.md` skill 文档
+- ✅ 文档化"为什么必须这样做"的原因
+- ✅ 实战成功：西湖划船视频（岸边→跳船，8秒）
+
+### 2026-05-24 晚上 - @ 方式完成 + 换行问题修复
 - ✅ 发现并实现 @ 方式添加角色
 - ✅ 创建 flow_automation_at_method.py
 - ❌ 第一版：错误地在 All Media 中选择
@@ -441,6 +496,11 @@ killall "Google Chrome"
 - ✅ 理解两种模式：Character vs Upload
 - ✅ 更新 FLOW_SKILL.md 文档
 - ✅ 总结高级用法（为角色指定动作）
+- ⚠️ **发现关键问题：Prompt 换行导致提前提交**
+- ✅ **修复：改用单行 Prompt，添加输入延迟和验证**
+- ✅ 第二个角色自动添加，无需点击 "Add to Prompt"
+- ✅ 成功率提升到 100%
+- ✅ 实战：生成西湖场景图片（岸边 + 跳船）
 
 ### 2026-05-24 下午
 - ✅ 创建项目

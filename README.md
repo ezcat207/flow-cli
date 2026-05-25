@@ -1,266 +1,213 @@
 # Flow CLI - Google Flow 自动化工具
 
-自动化 Google Flow 图片生成的命令行工具。
+自动化 Google Flow 图片和视频生成的 Python 脚本集合。
 
-## 🎯 功能
+## ✨ 特点
 
-- ✅ **命令行界面** - 简单易用的 CLI 工具
-- ✅ **配置管理** - 支持配置文件和命令行参数
-- ✅ **Chrome 管理** - 一键启动/停止 Chrome
-- ✅ **自动添加参考图** - 支持多张图片
-- ✅ **自动输入描述** - 自定义生成 Prompt
-- ✅ **自动提交生成** - 完整的自动化流程
-- ✅ **截图保存** - 自动保存生成结果
-- ✅ **错误处理** - 完善的错误提示
-
-## 📋 快速参考
-
-```bash
-# 安装
-pip install -e .
-
-# 配置
-flow config --set-project <PROJECT_URL>
-
-# 启动
-flow start-chrome
-
-# 生成
-flow generate -i image1.png -i image2.png -p "prompt"
-
-# 查看帮助
-flow --help
-```
-
-详细用法见：[CLI 使用指南](CLI_USAGE.md)
-
-## 📦 安装
-
-### 方式1: CLI 工具安装（推荐）
-
-```bash
-# 克隆仓库
-git clone <repository-url>
-cd flow-cli
-
-# 开发模式安装
-pip install -e .
-
-# 安装 Playwright
-playwright install chromium
-```
-
-详细安装说明见：[INSTALL.md](INSTALL.md)
-
-### 方式2: 直接运行脚本
-
-```bash
-# 安装依赖
-pip install playwright
-playwright install chromium
-
-# 使用脚本
-./scripts/start_chrome.sh
-python3 scripts/flow_automation_final.py
-```
+- ✅ **完全自动化** - 从添加角色到生成提交
+- ✅ **稳定可靠** - 使用语义选择器，不依赖坐标
+- ✅ **支持缩放** - 页面 zoom 不影响
+- ✅ **图片 + 视频** - 两种模式都支持
 
 ## 🚀 快速开始
 
-### 使用 CLI（推荐）
+### 1. 启动 Chrome
 
 ```bash
-# 1. 配置项目
-flow config --set-project https://labs.google/fx/tools/flow/project/YOUR_PROJECT_ID
-
-# 2. 启动 Chrome
-flow start-chrome
-
-# 3. 在 Chrome 中登录 Google 账号并打开 Flow 项目
-
-# 4. 生成图片
-flow generate \
-  -i Luna_on_mars.png \
-  -i Wayne_on_earth.png \
-  -p "他们在中国杭州玩"
-```
-
-### 使用脚本
-
-```bash
-# 1. 启动 Chrome
 ./scripts/start_chrome.sh
-
-# 2. 登录并打开项目（在 Chrome 中）
-
-# 3. 运行自动化
-python3 scripts/flow_automation_final.py
 ```
 
-## 📚 文档
+### 2. 在浏览器中
 
-- [CLI 使用指南](CLI_USAGE.md) - **CLI 工具完整使用说明** ⭐
-- [安装指南](INSTALL.md) - 详细的安装步骤
-- [完整教程](docs/FLOW_TUTORIAL.md) - 详细的操作教程
-- [技能文档](docs/FLOW_SKILL.md) - 界面元素和选项详解
-- [总结文档](docs/FLOW_AUTOMATION_SUMMARY.md) - 完整总结和经验
+- 登录 Google 账号
+- 打开你的 Flow 项目页面
+
+### 3. 生成图片
+
+```bash
+python3 scripts/flow_automation_at_method.py
+```
+
+### 4. 生成视频
+
+```bash
+python3 scripts/flow_video_at_method.py
+```
+
+## 📜 核心脚本
+
+| 脚本 | 功能 | 状态 |
+|------|------|------|
+| `flow_automation_at_method.py` | 图片生成（@ 方式） | ✅ 稳定 |
+| `flow_video_at_method.py` | 视频生成（@ 方式） | ✅ 稳定 |
+| `download_video.py` | 下载生成内容 | ✅ 可用 |
+| `start_chrome.sh` | 启动 Chrome（调试模式） | ✅ 必需 |
 
 ## ⚙️ 配置
 
-### CLI 配置
+### 图片生成配置
 
-```bash
-# 查看当前配置
-flow config --show
-
-# 设置项目 URL
-flow config --set-project https://labs.google/fx/tools/flow/project/YOUR_PROJECT_ID
-
-# 设置截图保存目录
-flow config --set-screenshot-dir ~/Pictures/flow-screenshots
-
-# 设置 CDP URL（通常不需要修改）
-flow config --set-cdp-url http://127.0.0.1:9222
-```
-
-配置文件位置：`~/.config/flow-cli/config.json`
-
-### 脚本配置
-
-编辑 `scripts/flow_automation_final.py` 中的配置：
+编辑 `scripts/flow_automation_at_method.py`:
 
 ```python
-# 项目 URL
-PROJECT_URL = "https://labs.google/fx/tools/flow/project/YOUR_PROJECT_ID"
-
-# 参考图文件名
-REFERENCE_IMAGES = [
-    "your_image1.png",
-    "your_image2.png"
-]
-
-# 生成 Prompt
-PROMPT = "你的自定义 prompt"
+CHARACTERS = ["luna", "wayne"]
+PROMPT = "Luna 是一只白色兔子，Wayne 是一只猫，他们在北京长城玩，中国风"
 ```
+
+### 视频生成配置
+
+编辑 `scripts/flow_video_at_method.py`:
+
+```python
+CHARACTERS = ["luna", "wayne"]
+MOTION_PROMPT = "Luna 是兔子，Wayne 是猫，他们在海边奔跑，日式动漫风格"
+```
+
+## ⚠️ 重要注意事项
+
+### 1. 必须明确说明角色物种
+
+**Luna** = 白色兔子 🐰
+**Wayne** = 猫 🐱（不是狗！）
+
+Flow 无法准确识别角色物种，必须在 Prompt 中明确说明：
+
+```python
+# ✅ 正确
+PROMPT = "Luna 是兔子，Wayne 是猫，他们在玩"
+
+# ❌ 错误
+PROMPT = "Luna 和 Wayne 在玩"  # 没说是什么动物
+```
+
+### 2. Prompt 必须单行
+
+```python
+# ✅ 正确
+PROMPT = "Luna 是兔子，Wayne 是猫，在大峡谷玩，日式风格"
+
+# ❌ 错误 - 换行会导致提前提交
+PROMPT = """Luna 是兔子
+Wayne 是猫
+在大峡谷玩"""
+```
+
+### 3. 不要使用坐标方式
+
+旧版脚本使用坐标点击（已归档）：
+- ❌ 页面缩放会失效
+- ❌ 窗口大小改变会失效
+- ❌ 非常不稳定
+
+新版脚本使用语义选择器：
+- ✅ `get_by_role()`
+- ✅ 基于元素角色和文本
+- ✅ 稳定可靠
+
+## 📚 文档
+
+- **完整 Skill 文档**: `.claude/skills/flow-automation-complete.md`
+- **项目记忆**: `CLAUDE.md`
+- **界面参考**: `docs/FLOW_SKILL.md`
+
+## 🔧 技术栈
+
+- **Python** - 脚本语言
+- **Playwright** - 浏览器自动化
+- **CDP** - Chrome DevTools Protocol
+- **端口** - 9222
 
 ## 📁 项目结构
 
 ```
 flow-cli/
-├── README.md              # 项目说明
-├── INSTALL.md             # 安装指南
-├── pyproject.toml         # Python 项目配置
-├── setup.py               # 安装脚本
-├── flow_cli/              # CLI 工具包
-│   ├── __init__.py        # 包初始化
-│   ├── cli.py             # CLI 主入口
-│   ├── automation.py      # 自动化核心逻辑
-│   ├── config.py          # 配置管理
-│   └── chrome.py          # Chrome 管理工具
-├── docs/                  # 文档目录
-│   ├── FLOW_TUTORIAL.md   # 完整教程
-│   ├── FLOW_SKILL.md      # 技能文档
-│   └── FLOW_AUTOMATION_SUMMARY.md  # 总结文档
-├── scripts/               # 脚本目录（向后兼容）
-│   ├── start_chrome.sh    # Chrome 启动脚本
-│   └── flow_automation_final.py  # 主自动化脚本
-└── archive/               # 历史尝试（失败的方案）
-    ├── README.md          # 失败原因说明
-    └── [旧脚本...]
+├── scripts/                    # 核心脚本
+│   ├── flow_automation_at_method.py    # 图片生成 ⭐
+│   ├── flow_video_at_method.py         # 视频生成 ⭐
+│   ├── download_video.py               # 下载工具
+│   └── start_chrome.sh                 # Chrome 启动
+├── downloads/                  # 下载目录
+├── docs/                       # 文档
+│   └── FLOW_SKILL.md          # 界面参考
+├── .claude/skills/            # Skill 文档
+│   └── flow-automation-complete.md    # 完整指南 ⭐
+└── archive/                    # 归档（旧版本）
 ```
 
-## 🎓 学到的经验
+## 💡 使用示例
 
-### 成功的关键
+### 生成图片：东方明珠塔
 
-1. **正确的入口点**
-   - ✅ 使用输入框旁的加号按钮
-   - ❌ 不是顶部的 "Add Media" 按钮
+```python
+# 编辑 flow_automation_at_method.py
+CHARACTERS = ["luna", "wayne"]
+PROMPT = "Luna 是白兔，Wayne 是猫，他们在上海东方明珠塔下玩，现代都市风"
+```
 
-2. **稳定的选择器**
-   - ✅ 文本选择器和坐标点击
-   - ❌ 复杂的 CSS 选择器
+```bash
+python3 scripts/flow_automation_at_method.py
+```
 
-3. **Chrome Profile 管理**
-   - ✅ 使用独立的测试 profile
-   - ❌ 使用系统 profile（调试端口打不开）
+### 生成视频：大峡谷探险
 
-## ⚠️ 常见问题
+```python
+# 编辑 flow_video_at_method.py
+CHARACTERS = ["luna", "wayne"]
+MOTION_PROMPT = "Luna 是兔子，Wayne 是猫，在大峡谷探险，日式动漫风格"
+```
 
-### Q: 找不到文件名？
+```bash
+python3 scripts/flow_video_at_method.py
+# 等待约 2 分钟
+python3 scripts/download_video.py
+```
 
-**A:** 确保：
-1. 媒体选择器已打开
-2. 在 Uploads 分类中
-3. 文件已上传
+## 🐛 故障排查
 
-### Q: Create 按钮不可点击？
+### Chrome 连接失败
 
-**A:** 检查：
-1. Prompt 是否已输入
-2. 按钮状态 (aria-disabled)
-3. 是否是正确的按钮（带箭头的）
+```bash
+# 检查端口
+lsof -i :9222
 
-### Q: Chrome 连接失败？
+# 重启 Chrome
+killall "Google Chrome"
+./scripts/start_chrome.sh
+```
 
-**A:** 确认：
-1. Chrome 已启动
-2. 使用了 `--remote-debugging-port=9222`
-3. 使用了独立的 profile 目录
+### 找不到角色
 
-更多问题见：[故障排除](docs/FLOW_TUTORIAL.md#故障排除)
+1. 确保已在 Flow 中创建 Character（luna, wayne）
+2. 检查角色名称拼写
+3. 查看截图：`/tmp/*.png`
 
-## 📊 性能
+### 生成结果不对
 
-- 总耗时: ~20-30秒
-  - Chrome 连接: <1秒
-  - 添加参考图: ~10秒
-  - 输入 Prompt: ~2秒
-  - 提交生成: ~3秒
+1. 检查 Prompt 是否明确说明了物种
+2. 确保 Prompt 是单行（无换行）
+3. 等待时间是否充足
 
-## 🚧 下一步计划
+## 📝 更新日志
 
-- [x] 命令行界面 (CLI) ✅
-- [x] 配置文件支持 ✅
-- [ ] 批量处理
-- [ ] 结果自动下载
-- [ ] 进度监控
-- [ ] 交互式图片选择
-- [ ] 支持从文件读取配置
+### 2024-05-24 - v2.0
+- ✅ 移除所有坐标方式
+- ✅ 使用 `get_by_role()` 语义选择器
+- ✅ 归档旧脚本
+- ✅ 创建完整 Skill 文档
+- ⚠️ 强调必须说明角色物种
 
-## 📝 版本历史
+## 🤝 贡献
 
-### v0.1.0 (2026-05-24)
+欢迎提交 Issues 和 Pull Requests！
 
-- ✅ CLI 工具
-- ✅ 配置管理
-- ✅ Chrome 启动/停止
-- ✅ 自动添加参考图
-- ✅ 自动输入 Prompt
-- ✅ 自动提交生成
-- ✅ 完整文档
+## 📄 License
 
-### v1.0.0 (2026-05-24)
+MIT
 
-- ✅ 基础自动化脚本
-- ✅ 参考图添加
-- ✅ Prompt 输入
-- ✅ 生成提交
-- ✅ 完整文档
+## 👥 作者
 
-## 📄 许可
-
-MIT License
-
-## 🙏 致谢
-
-基于 Google Flow 和 Playwright 构建。
+Claude + User
 
 ---
 
-**环境要求:**
-- macOS (tested)
-- Chrome 148+
-- Python 3.13+
-- Playwright
-
-**创建日期:** 2026-05-24
+**⭐ Star this repo if you find it useful!**
